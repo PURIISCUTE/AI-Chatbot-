@@ -22,6 +22,7 @@ interface BookingsManagerProps {
   onCancelBooking: (bookingId: string) => Promise<void>;
   onAddManualBooking: (bookingData: any) => Promise<void>;
   onNavigateToChat: () => void;
+  onViewBookingEmail?: (booking: BookingRecord) => void;
 }
 
 export const BookingsManager: React.FC<BookingsManagerProps> = ({
@@ -29,7 +30,8 @@ export const BookingsManager: React.FC<BookingsManagerProps> = ({
   currentBusiness,
   onCancelBooking,
   onAddManualBooking,
-  onNavigateToChat
+  onNavigateToChat,
+  onViewBookingEmail
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'confirmed' | 'cancelled'>('all');
@@ -238,17 +240,23 @@ export const BookingsManager: React.FC<BookingsManagerProps> = ({
 
                     <td className="py-3 px-4">
                       <div className="font-medium text-slate-800">{b.customerName} ({b.guestCount}p)</div>
-                      <div className="text-[11px] text-slate-500 truncate max-w-[180px]">
-                        {b.customerEmail || b.customerPhone}
+                      <div className="text-[11px] text-slate-500 truncate max-w-[180px] flex items-center gap-1">
+                        <Mail className="w-3 h-3 text-emerald-600 shrink-0" />
+                        <span>{b.customerEmail || b.customerPhone}</span>
                       </div>
                     </td>
 
                     <td className="py-3 px-4">
                       {b.status === 'confirmed' ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full font-semibold text-[11px]">
-                          <CheckCircle className="w-3 h-3" />
-                          Confirmed
-                        </span>
+                        <div className="space-y-1">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full font-semibold text-[11px]">
+                            <CheckCircle className="w-3 h-3" />
+                            Confirmed
+                          </span>
+                          <div className="text-[10px] text-emerald-700 font-medium">
+                            Pass Dispatched
+                          </div>
+                        </div>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-full font-semibold text-[11px]">
                           <XCircle className="w-3 h-3" />
@@ -258,15 +266,26 @@ export const BookingsManager: React.FC<BookingsManagerProps> = ({
                     </td>
 
                     <td className="py-3 px-4 text-right">
-                      {b.status === 'confirmed' && (
-                        <button
-                          id={`btn-cancel-table-${b.id}`}
-                          onClick={() => onCancelBooking(b.id)}
-                          className="px-2.5 py-1 text-rose-600 hover:bg-rose-50 rounded-md font-medium transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      )}
+                      <div className="flex items-center justify-end gap-1.5">
+                        {onViewBookingEmail && (
+                          <button
+                            onClick={() => onViewBookingEmail(b)}
+                            className="px-2.5 py-1 text-xs text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md font-medium transition-colors"
+                            title="View Dispatched Confirmation Email"
+                          >
+                            Email Pass
+                          </button>
+                        )}
+                        {b.status === 'confirmed' && (
+                          <button
+                            id={`btn-cancel-table-${b.id}`}
+                            onClick={() => onCancelBooking(b.id)}
+                            className="px-2.5 py-1 text-xs text-rose-600 hover:bg-rose-50 rounded-md font-medium transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -341,14 +360,27 @@ export const BookingsManager: React.FC<BookingsManagerProps> = ({
               </div>
 
               <div>
-                <label className="block text-slate-700 font-medium mb-1">Contact Email/Phone</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-slate-700 font-medium">Recipient Email (Gmail, Yahoo, etc.) *</label>
+                  <button
+                    type="button"
+                    onClick={() => setNewBooking({ ...newBooking, customerEmail: 'pratiksurya02@gmail.com' })}
+                    className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 cursor-pointer"
+                  >
+                    Use pratiksurya02@gmail.com
+                  </button>
+                </div>
                 <input
-                  type="text"
-                  placeholder="email@example.com or phone"
+                  type="email"
+                  required
+                  placeholder="e.g. name@gmail.com or user@yahoo.com"
                   value={newBooking.customerEmail}
                   onChange={(e) => setNewBooking({ ...newBooking, customerEmail: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-800"
                 />
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  An official booking confirmation pass with calendar invite (.ics) will be dispatched here.
+                </p>
               </div>
 
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">

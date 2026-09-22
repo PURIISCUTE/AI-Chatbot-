@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, X, Bot, Sparkles, ChevronDown, Maximize2, Minimize2 } from 'lucide-react';
-import { BusinessPreset, ChatMessage } from '../types';
+import { BusinessPreset, ChatMessage, BookingRecord } from '../types';
 import { ChatInterface } from './ChatInterface';
 
 interface FloatingChatWidgetProps {
@@ -15,6 +15,7 @@ interface FloatingChatWidgetProps {
   isOpen: boolean;
   onToggleOpen: () => void;
   onOpenWithPrompt?: (prompt: string) => void;
+  onViewEmailReceipt?: (confirmation: BookingRecord) => void;
 }
 
 export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
@@ -28,7 +29,8 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   isLoading,
   isOpen,
   onToggleOpen,
-  onOpenWithPrompt
+  onOpenWithPrompt,
+  onViewEmailReceipt
 }) => {
   const [showProactiveBubble, setShowProactiveBubble] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -123,6 +125,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
               isLoading={isLoading}
               isWidgetMode={true}
               onCloseWidget={onToggleOpen}
+              onViewEmailReceipt={onViewEmailReceipt}
             />
           </div>
         </div>

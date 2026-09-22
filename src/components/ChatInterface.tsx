@@ -72,6 +72,7 @@ interface ChatInterfaceProps {
   isLoading: boolean;
   isWidgetMode?: boolean;
   onCloseWidget?: () => void;
+  onViewEmailReceipt?: (confirmation: BookingRecord) => void;
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -84,7 +85,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   onResetChat,
   isLoading,
   isWidgetMode = false,
-  onCloseWidget
+  onCloseWidget,
+  onViewEmailReceipt
 }) => {
   const [inputText, setInputText] = useState('');
   const [speakingId, setSpeakingId] = useState<string | null>(null);
@@ -394,6 +396,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       businessId={business.id}
                       onConfirmBooking={onConfirmBooking}
                       onCancelBooking={onCancelBooking}
+                      onViewEmailReceipt={onViewEmailReceipt}
                     />
                   )}
 

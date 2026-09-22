@@ -60,6 +60,27 @@ export interface BookingRecord {
   status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
   createdAt: string;
   confirmationCode: string;
+  emailStatus?: 'sent_smtp' | 'delivered' | 'failed' | 'pending';
+  emailDeliveredTo?: string;
+}
+
+export interface DispatchedEmail {
+  id: string;
+  bookingId: string;
+  confirmationCode: string;
+  to: string;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+  status: 'sent_smtp' | 'delivered' | 'failed';
+  provider: string; // 'Direct SMTP' | '24/7 Automated Dispatcher'
+  sentAt: string;
+  businessName: string;
+  serviceName: string;
+  date: string;
+  time: string;
+  customerName: string;
+  hasCalendarAttachment: boolean;
 }
 
 export interface FeedbackRecord {

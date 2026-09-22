@@ -8,7 +8,8 @@ import {
   ChevronDown,
   Building2,
   Zap,
-  CheckCircle2
+  CheckCircle2,
+  Mail
 } from 'lucide-react';
 import { BusinessPreset } from '../types';
 
@@ -16,9 +17,10 @@ interface HeaderProps {
   currentBusiness: BusinessPreset;
   businesses: BusinessPreset[];
   onSelectBusiness: (business: BusinessPreset) => void;
-  activeTab: 'website' | 'chat' | 'bookings' | 'feedback' | 'kb';
-  onSelectTab: (tab: 'website' | 'chat' | 'bookings' | 'feedback' | 'kb') => void;
+  activeTab: 'website' | 'chat' | 'bookings' | 'feedback' | 'kb' | 'emails';
+  onSelectTab: (tab: 'website' | 'chat' | 'bookings' | 'feedback' | 'kb' | 'emails') => void;
   bookingCount: number;
+  emailCount?: number;
   csatScore: number;
   onOpenScenarios: () => void;
 }
@@ -30,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onSelectTab,
   bookingCount,
+  emailCount = 0,
   csatScore,
   onOpenScenarios
 }) => {
@@ -142,6 +145,28 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               {bookingCount}
+            </span>
+          </button>
+
+          <button
+            id="tab-emails"
+            onClick={() => onSelectTab('emails')}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+              activeTab === 'emails'
+                ? 'bg-slate-900 text-white shadow-2xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Mail className="w-4 h-4 text-emerald-500" />
+            <span>Email Confirmations</span>
+            <span
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                activeTab === 'emails'
+                  ? 'bg-emerald-400 text-slate-900'
+                  : 'bg-emerald-100 text-emerald-800'
+              }`}
+            >
+              {emailCount}
             </span>
           </button>
 
